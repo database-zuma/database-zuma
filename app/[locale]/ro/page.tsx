@@ -38,6 +38,10 @@ type ROStatus = 'queue' | 'approved' | 'picking' | 'pick_verified' | 'dnpb_proce
 export default function ROPage() {
   const router = useRouter();
   const t = useTranslations("ro");
+  const tTable = useTranslations("ro.table");
+  const tFilters = useTranslations("ro.filters");
+  const tStats = useTranslations("ro.stats");
+  const tStatus = useTranslations("ro.status");
   const [stats, setStats] = useState<DashboardStats>({ totalRO: 0, queued: 0, totalBoxes: 0, totalPairs: 0 });
   const [roData, setRoData] = useState<ROItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,20 +93,20 @@ export default function ROPage() {
     const statusLower = status.toLowerCase();
     switch (statusLower) {
       case 'completed':
-        return { label: 'Complete', color: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' };
+        return { label: tStatus('completed'), color: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' };
       case 'in_delivery':
-        return { label: 'Delivery', color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' };
+        return { label: tStatus('inDelivery'), color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' };
       case 'ready_to_ship':
-        return { label: 'Ready', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' };
+        return { label: tStatus('readyToShip'), color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' };
       case 'dnpb_process':
-        return { label: 'DNPB', color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' };
+        return { label: tStatus('dnpbProcess'), color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' };
       case 'picking':
       case 'pick_verified':
-        return { label: 'Picking', color: 'bg-orange-500/10 text-orange-600 border-orange-500/20' };
+        return { label: tStatus('picking'), color: 'bg-orange-500/10 text-orange-600 border-orange-500/20' };
       case 'approved':
-        return { label: 'Approved', color: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20' };
+        return { label: tStatus('approved'), color: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20' };
       case 'queue':
-        return { label: 'Queue', color: 'bg-gray-500/10 text-gray-600 border-gray-500/20' };
+        return { label: tStatus('queue'), color: 'bg-gray-500/10 text-gray-600 border-gray-500/20' };
       default:
         return { label: status, color: 'bg-gray-500/10 text-gray-600 border-gray-500/20' };
     }
@@ -111,7 +115,7 @@ export default function ROPage() {
   const statsCards = [
     { 
       value: stats.totalRO.toString(), 
-      label: 'Total RO', 
+      label: tStats('totalRO'), 
       icon: Package,
       gradient: 'from-[#002A3A] to-[#003847]',
       iconBg: 'bg-[#00E273]/20',
@@ -119,7 +123,7 @@ export default function ROPage() {
     },
     { 
       value: stats.queued.toString(), 
-      label: 'Queued', 
+      label: tStats('queued'), 
       icon: Clock,
       gradient: 'from-amber-600 to-orange-600',
       iconBg: 'bg-white/20',
@@ -127,7 +131,7 @@ export default function ROPage() {
     },
     { 
       value: stats.totalBoxes.toString(), 
-      label: 'Total Boxes', 
+      label: tStats('totalBoxes'), 
       icon: Box,
       gradient: 'from-[#00E273] to-[#00B85E]',
       iconBg: 'bg-white/20',
@@ -135,7 +139,7 @@ export default function ROPage() {
     },
     { 
       value: stats.totalPairs.toString(), 
-      label: 'Total Pairs', 
+      label: tStats('totalPairs'), 
       icon: Layers,
       gradient: 'from-purple-600 to-pink-600',
       iconBg: 'bg-white/20',
@@ -152,10 +156,10 @@ export default function ROPage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-5xl font-black text-[#002A3A] mb-2 tracking-tight">
-                Replenishment Orders
+                {t("replenishmentTitle")}
               </h1>
               <p className="text-lg text-gray-600 font-light">
-                Manage store replenishment requests and fulfillment
+                {t("subtitle")}
               </p>
             </div>
             
@@ -166,7 +170,7 @@ export default function ROPage() {
               className="border-[#002A3A] text-[#002A3A] hover:bg-[#002A3A] hover:text-white transition-all"
             >
               <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh
+              {t("refresh")}
             </Button>
           </div>
           
@@ -209,8 +213,8 @@ export default function ROPage() {
                   <Package className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">All Replenishment Orders</h2>
-                  <p className="text-sm text-gray-500">{filteredROList.length} orders found</p>
+                  <h2 className="text-xl font-bold text-gray-900">{tTable("allOrders")}</h2>
+                  <p className="text-sm text-gray-500">{tTable("ordersFound", { count: filteredROList.length })}</p>
                 </div>
               </div>
 
@@ -219,7 +223,7 @@ export default function ROPage() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input
                     type="text"
-                    placeholder="Search RO ID or Store..."
+                    placeholder={tFilters("searchPlaceholder")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 border-gray-200 focus:border-[#00E273] focus:ring-[#00E273]"
@@ -228,10 +232,10 @@ export default function ROPage() {
 
                 <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
                   {[
-                    { key: 'ALL', label: 'All', icon: Filter },
-                    { key: 'ONGOING', label: 'Ongoing', icon: Clock },
-                    { key: 'SHIPPING', label: 'Shipping', icon: Truck },
-                    { key: 'COMPLETE', label: 'Complete', icon: CheckCircle2 },
+                    { key: 'ALL', label: tFilters('all'), icon: Filter },
+                    { key: 'ONGOING', label: tFilters('ongoing'), icon: Clock },
+                    { key: 'SHIPPING', label: tFilters('shipping'), icon: Truck },
+                    { key: 'COMPLETE', label: tFilters('complete'), icon: CheckCircle2 },
                   ].map(({ key, label, icon: Icon }) => (
                     <Button
                       key={key}
@@ -257,11 +261,11 @@ export default function ROPage() {
             <table className="w-full">
               <thead>
                 <tr className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 bg-gray-50/50">
-                  <th className="py-4 px-6">RO ID</th>
-                  <th className="py-4 px-6">Store</th>
-                  <th className="py-4 px-6 text-center">Boxes</th>
-                  <th className="py-4 px-6 text-right">Status</th>
-                  <th className="py-4 px-6 text-right">Action</th>
+                  <th className="py-4 px-6">{tTable("roId")}</th>
+                  <th className="py-4 px-6">{tTable("store")}</th>
+                  <th className="py-4 px-6 text-center">{tTable("boxes")}</th>
+                  <th className="py-4 px-6 text-right">{tTable("status")}</th>
+                  <th className="py-4 px-6 text-right">{tTable("action")}</th>
                 </tr>
               </thead>
               <tbody className="text-sm divide-y divide-gray-50">
@@ -269,15 +273,15 @@ export default function ROPage() {
                   <tr>
                     <td colSpan={5} className="py-12 text-center text-gray-400">
                       <RefreshCw className="w-8 h-8 mx-auto mb-3 animate-spin text-[#00E273]" />
-                      Loading orders...
+                      {tTable("loadingOrders")}
                     </td>
                   </tr>
                 ) : filteredROList.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="py-12 text-center">
                       <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                      <p className="text-gray-500 font-medium">No RO requests found</p>
-                      <p className="text-gray-400 text-sm mt-1">Try adjusting your filters</p>
+                      <p className="text-gray-500 font-medium">{tTable("noROFound")}</p>
+                      <p className="text-gray-400 text-sm mt-1">{tTable("adjustFilters")}</p>
                     </td>
                   </tr>
                 ) : (
@@ -315,7 +319,7 @@ export default function ROPage() {
                             size="sm"
                             className="opacity-0 group-hover:opacity-100 transition-opacity text-[#00E273] hover:text-[#00B85E] hover:bg-[#00E273]/10"
                           >
-                            View Details →
+                            {tTable("viewDetails")}
                           </Button>
                         </td>
                       </tr>

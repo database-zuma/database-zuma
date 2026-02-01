@@ -122,6 +122,7 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Intelijen gudang real-time",
+    "rbacMessage": "Selamat datang di Zuma WMS Extended. Sistem RBAC sekarang aktif.",
     "metrics": {
       "totalStock": "Total Stok",
       "lowStock": "Stok Menipis",
@@ -151,6 +152,7 @@
     "title": "Transaksi",
     "newTransaction": "Transaksi Baru",
     "warehouseTitle": "Transaksi Gudang",
+    "forWarehouse": "Data transaksi untuk gudang {warehouse} akan ditampilkan di sini.",
     "table": {
       "id": "ID Transaksi",
       "no": "No",
@@ -203,6 +205,7 @@
   "stock": {
     "title": "Stok Saat Ini",
     "subtitle": "Inventori real-time di semua gudang",
+    "comingSoon": "Inventori real-time di semua gudang (Segera Hadir)",
     "overview": "Ikhtisar Stok",
     "filters": {
       "title": "Filter & Pencarian",
@@ -290,9 +293,25 @@
   },
   "ro": {
     "title": "Receiving Order",
+    "replenishmentTitle": "Replenishment Order",
     "newRO": "RO Baru",
     "editRO": "Ubah RO",
     "details": "Detail RO",
+    "subtitle": "Kelola permintaan dan pemenuhan replenishment toko",
+    "refresh": "Segarkan",
+    "stats": {
+      "totalRO": "Total RO",
+      "queued": "Dalam Antrian",
+      "totalBoxes": "Total Box",
+      "totalPairs": "Total Pasang"
+    },
+    "filters": {
+      "all": "Semua",
+      "ongoing": "Berlangsung",
+      "shipping": "Pengiriman",
+      "complete": "Selesai",
+      "searchPlaceholder": "Cari ID RO atau Toko..."
+    },
     "table": {
       "roNumber": "Nomor RO",
       "poReference": "Referensi PO",
@@ -303,7 +322,17 @@
       "totalQuantity": "Total Jumlah",
       "status": "Status",
       "createdBy": "Dibuat Oleh",
-      "notes": "Catatan"
+      "notes": "Catatan",
+      "roId": "ID RO",
+      "store": "Toko",
+      "boxes": "Box",
+      "action": "Aksi",
+      "ordersFound": "{count} order ditemukan",
+      "loadingOrders": "Memuat order...",
+      "noROFound": "Tidak ada permintaan RO",
+      "adjustFilters": "Coba sesuaikan filter Anda",
+      "viewDetails": "Lihat Detail →",
+      "allOrders": "Semua Replenishment Order"
     },
     "status": {
       "draft": "Draft",
@@ -312,7 +341,46 @@
       "partiallyReceived": "Diterima Sebagian",
       "received": "Diterima",
       "cancelled": "Dibatalkan",
-      "closed": "Ditutup"
+      "closed": "Ditutup",
+      "queue": "Antrian",
+      "approved": "Disetujui",
+      "picking": "Picking",
+      "pickVerified": "Terverifikasi",
+      "dnpbProcess": "DNPB",
+      "readyToShip": "Siap Kirim",
+      "inDelivery": "Pengiriman",
+      "arrived": "Sampai",
+      "completed": "Selesai"
+    },
+    "detail": {
+      "backToList": "Kembali ke Daftar RO",
+      "backToDetail": "Kembali ke Detail RO",
+      "articleBreakdown": "Rincian Artikel",
+      "orderProgress": "Progress Order",
+      "viewArticles": "Lihat Artikel",
+      "nextStage": "Tahap Selanjutnya",
+      "saveChanges": "Simpan Perubahan",
+      "dnpbRequired": "Nomor DNPB Diperlukan",
+      "dnpbPlaceholder": "DNPB/DDD/WHS/2026/I/001",
+      "current": "Saat ini",
+      "articles": "artikel",
+      "requested": "Diminta",
+      "total": "Total",
+      "notFound": "RO Tidak Ditemukan",
+      "notFoundDescription": "RO yang diminta tidak ada",
+      "unsavedChanges": "Anda memiliki perubahan yang belum disimpan. Buang perubahan?",
+      "statusDescriptions": {
+        "queue": "Menunggu persetujuan",
+        "approved": "Disetujui Supervisor WH",
+        "picking": "Sedang di-pick dari gudang",
+        "pickVerified": "Kuantitas pick terverifikasi",
+        "dnpbProcess": "Memproses delivery note",
+        "readyToShip": "Siap untuk dikirim",
+        "inDelivery": "Sedang dalam pengiriman",
+        "arrived": "Diterima di toko",
+        "completed": "Order ditutup"
+      },
+      "currentStatus": "Status Saat Ini"
     },
     "actions": {
       "create": "Buat RO",
@@ -346,7 +414,15 @@
       "confirmed": "Receiving order dikonfirmasi",
       "received": "Item berhasil diterima",
       "cancelled": "Receiving order dibatalkan",
-      "closed": "Receiving order ditutup"
+      "closed": "Receiving order ditutup",
+      "alreadyCompleted": "Order sudah selesai",
+      "advanceConfirm": "Majukan status ke \"{status}\"?",
+      "dnpbRequired": "Nomor DNPB diperlukan sebelum melanjutkan",
+      "dnpbError": "Error DNPB",
+      "saveSuccess": "Perubahan berhasil disimpan",
+      "saveFailed": "Gagal menyimpan perubahan",
+      "statusUpdated": "Status diperbarui ke {status}",
+      "statusUpdateFailed": "Gagal memperbarui status"
     }
   },
   "language": {
@@ -354,5 +430,8 @@
     "select": "Pilih Bahasa",
     "english": "English",
     "indonesian": "Bahasa Indonesia"
+  },
+  "header": {
+    "warehouseManagement": "Manajemen Gudang"
   }
 }

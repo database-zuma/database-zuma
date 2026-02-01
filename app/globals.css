@@ -238,3 +238,129 @@
     background: rgba(0, 226, 115, 0.5);
   }
 }
+
+/* Print Styles */
+@media print {
+  /* Hide UI elements */
+  .no-print,
+  header,
+  nav,
+  aside,
+  [role="navigation"],
+  [role="banner"],
+  button:not(.print-only),
+  .sidebar,
+  input[type="text"],
+  input[type="search"],
+  select,
+  .filter-controls,
+  .action-buttons {
+    display: none !important;
+  }
+
+  /* Show print-only elements */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Reset page styles for clean print */
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 20px;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  /* Page breaks */
+  h1, h2, h3 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  table {
+    page-break-inside: avoid;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  /* Table styling for print */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+
+  th, td {
+    border: 1px solid #333 !important;
+    padding: 8px !important;
+    text-align: left;
+  }
+
+  th {
+    background: #f0f0f0 !important;
+    font-weight: bold;
+  }
+
+  /* Headers and footers */
+  .print-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #333 !important;
+  }
+
+  .print-footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #333 !important;
+    font-size: 10pt;
+  }
+
+  /* Remove gradients and decorative elements */
+  .bg-gradient-to-br,
+  .bg-gradient-to-r,
+  .bg-gradient-to-b,
+  .rounded-2xl,
+  .rounded-xl,
+  .rounded-lg,
+  .shadow-lg,
+  .shadow-xl {
+    background: white !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure text is readable */
+  .text-white,
+  .text-gray-500,
+  .text-gray-400 {
+    color: #333 !important;
+  }
+
+  /* Print-specific spacing */
+  .print-spacing {
+    margin: 15px 0;
+  }
+
+  /* Logo/branding area */
+  .print-logo {
+    font-size: 18pt;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  /* Timestamp */
+  .print-timestamp {
+    font-size: 9pt;
+    color: #666 !important;
+    margin-top: 5px;
+  }
+}

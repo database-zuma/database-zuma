@@ -17,7 +17,8 @@ import {
   Edit3,
   Save,
   X,
-  TrendingUp
+  TrendingUp,
+  Printer
 } from "lucide-react";
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
@@ -51,16 +52,16 @@ interface RODetail {
 
 type ROStatus = 'QUEUE' | 'APPROVED' | 'PICKING' | 'PICK_VERIFIED' | 'DNPB_PROCESS' | 'READY_TO_SHIP' | 'IN_DELIVERY' | 'ARRIVED' | 'COMPLETED';
 
-const statusFlow: { id: ROStatus; label: string; icon: React.ElementType; description: string; color: string }[] = [
-  { id: 'QUEUE', label: 'Queue', icon: Clock, description: 'Awaiting approval', color: 'text-gray-600' },
-  { id: 'APPROVED', label: 'Approved', icon: CheckCircle2, description: 'WH Supervisor approved', color: 'text-cyan-600' },
-  { id: 'PICKING', label: 'Picking', icon: Package, description: 'Being picked from warehouse', color: 'text-orange-600' },
-  { id: 'PICK_VERIFIED', label: 'Verified', icon: CheckCircle2, description: 'Pick quantities verified', color: 'text-blue-600' },
-  { id: 'DNPB_PROCESS', label: 'DNPB', icon: Database, description: 'Delivery note processing', color: 'text-amber-600' },
-  { id: 'READY_TO_SHIP', label: 'Ready', icon: Package, description: 'Ready for dispatch', color: 'text-purple-600' },
-  { id: 'IN_DELIVERY', label: 'Delivery', icon: Truck, description: 'Out for delivery', color: 'text-blue-600' },
-  { id: 'ARRIVED', label: 'Arrived', icon: Home, description: 'Received at store', color: 'text-indigo-600' },
-  { id: 'COMPLETED', label: 'Completed', icon: CheckCircle2, description: 'Order closed', color: 'text-emerald-600' },
+const statusFlow: { id: ROStatus; icon: React.ElementType; statusKey: string; descKey: string; color: string }[] = [
+  { id: 'QUEUE', icon: Clock, statusKey: 'queue', descKey: 'queue', color: 'text-gray-600' },
+  { id: 'APPROVED', icon: CheckCircle2, statusKey: 'approved', descKey: 'approved', color: 'text-cyan-600' },
+  { id: 'PICKING', icon: Package, statusKey: 'picking', descKey: 'picking', color: 'text-orange-600' },
+  { id: 'PICK_VERIFIED', icon: CheckCircle2, statusKey: 'pickVerified', descKey: 'pickVerified', color: 'text-blue-600' },
+  { id: 'DNPB_PROCESS', icon: Database, statusKey: 'dnpbProcess', descKey: 'dnpbProcess', color: 'text-amber-600' },
+  { id: 'READY_TO_SHIP', icon: Package, statusKey: 'readyToShip', descKey: 'readyToShip', color: 'text-purple-600' },
+  { id: 'IN_DELIVERY', icon: Truck, statusKey: 'inDelivery', descKey: 'inDelivery', color: 'text-blue-600' },
+  { id: 'ARRIVED', icon: Home, statusKey: 'arrived', descKey: 'arrived', color: 'text-indigo-600' },
+  { id: 'COMPLETED', icon: CheckCircle2, statusKey: 'completed', descKey: 'completed', color: 'text-emerald-600' },
 ];
 
 export default function RODetailPage() {
@@ -68,7 +69,11 @@ export default function RODetailPage() {
   const params = useParams();
   const roId = params.id as string;
   const t = useTranslations("ro");
-  
+  const tDetail = useTranslations("ro.detail");
+  const tStatus = useTranslations("ro.status");
+  const tMessages = useTranslations("ro.messages");
+  const tCommon = useTranslations("common.buttons");
+   
   const [roDetail, setRoDetail] = useState<RODetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -109,17 +114,18 @@ export default function RODetailPage() {
     
     const currentIndex = statusFlow.findIndex(s => s.id === roDetail.currentStatus);
     if (currentIndex >= statusFlow.length - 1) {
-      alert('Order already completed');
+      alert(tMessages('alreadyCompleted'));
       return;
     }
-    
+
     const nextStatus = statusFlow[currentIndex + 1];
-    if (!confirm(`Advance status to "${nextStatus.label}"?`)) return;
-    
+    const nextStatusLabel = tStatus(nextStatus.statusKey);
+    if (!confirm(tMessages('advanceConfirm', { status: nextStatusLabel }))) return;
+
     if (roDetail.currentStatus === 'DNPB_PROCESS') {
       const dnpbToSave = dnpbInput || roDetail.dnpbNumber;
       if (!dnpbToSave) {
-        alert('DNPB Number is required before proceeding');
+        alert(tMessages('dnpbRequired'));
         return;
       }
       
@@ -132,12 +138,12 @@ export default function RODetailPage() {
         });
         const dnpbResult = await dnpbRes.json();
         if (!dnpbResult.success) {
-          alert(`DNPB Error: ${dnpbResult.error}`);
+          alert(`${tMessages('dnpbError')}: ${dnpbResult.error}`);
           setIsUpdating(false);
           return;
         }
       } catch (error) {
-        alert('Failed to save DNPB number');
+        alert(tMessages('saveFailed'));
         setIsUpdating(false);
         return;
       }
@@ -157,12 +163,12 @@ export default function RODetailPage() {
       if (result.success) {
         setRoDetail({ ...roDetail, currentStatus: nextStatus.id, dnpbNumber: dnpbInput || roDetail.dnpbNumber });
         setDnpbInput('');
-        alert(`Status updated to ${nextStatus.label}`);
+        alert(tMessages('statusUpdated', { status: nextStatusLabel }));
       } else {
         alert(result.error);
       }
     } catch (error) {
-      alert('Failed to update status');
+      alert(tMessages('statusUpdateFailed'));
       console.error(error);
     } finally {
       setIsUpdating(false);
@@ -228,15 +234,15 @@ export default function RODetailPage() {
       const errors = results.filter(r => !r.success);
       
       if (errors.length > 0) {
-        alert(`Failed to update: ${errors.map(e => e.articleCode).join(', ')}`);
+        alert(`${tMessages('saveFailed')}: ${errors.map(e => e.articleCode).join(', ')}`);
       } else {
-        alert('Changes saved successfully');
+        alert(tMessages('saveSuccess'));
       }
       
       setEditedArticles({});
       await fetchRODetail();
     } catch (error) {
-      alert('Failed to save changes');
+      alert(tMessages('saveFailed'));
       console.error(error);
     } finally {
       setIsSaving(false);
@@ -265,11 +271,11 @@ export default function RODetailPage() {
         <main className="container mx-auto px-6 py-8">
           <div className="text-center py-12">
             <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">RO Not Found</h2>
-            <p className="text-gray-500 mb-6">The requested RO does not exist</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">{tDetail('notFound')}</h2>
+            <p className="text-gray-500 mb-6">{tDetail('notFoundDescription')}</p>
             <Button onClick={() => router.push('/en/ro')}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to RO List
+              {tDetail('backToList')}
             </Button>
           </div>
         </main>
@@ -282,25 +288,41 @@ export default function RODetailPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <Header />
         <main className="container mx-auto px-6 py-8">
-          <Button
-            onClick={() => {
-              if (hasChanges && !confirm('You have unsaved changes. Discard them?')) return;
-              setViewArticles(false);
-              setEditedArticles({});
-            }}
-            variant="ghost"
-            className="mb-6"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to RO Detail
-          </Button>
+          <div className="flex items-center justify-between mb-6">
+            <Button
+              onClick={() => {
+                if (hasChanges && !confirm(tDetail('unsavedChanges'))) return;
+                setViewArticles(false);
+                setEditedArticles({});
+              }}
+              variant="ghost"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              {tDetail('backToDetail')}
+            </Button>
+            <Button
+              onClick={() => window.print()}
+              variant="outline"
+              className="no-print border-2 border-[#002A3A] hover:bg-[#002A3A] hover:text-white"
+            >
+              <Printer className="w-4 h-4 mr-2" />
+              {tCommon('print')} Pick List
+            </Button>
+          </div>
+
+          <div className="print-only print-header">
+            <div className="print-logo">ZUMA WMS - Pick List</div>
+            <div className="print-timestamp">
+              Printed: {new Date().toLocaleString()}
+            </div>
+          </div>
 
           <div className="bg-gradient-to-br from-[#002A3A] to-[#003847] rounded-2xl p-6 text-white mb-6 shadow-xl">
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs opacity-80 font-mono mb-1">{roDetail.id}</p>
                 <p className="text-2xl font-bold">{roDetail.store}</p>
-                <p className="text-sm opacity-80 mt-2">{roDetail.totalArticles} articles • {roDetail.totalBoxes} boxes</p>
+                <p className="text-sm opacity-80 mt-2">{roDetail.totalArticles} {tDetail('articles')} • {roDetail.totalBoxes} boxes</p>
               </div>
               <span className="px-4 py-2 bg-white/20 rounded-xl text-sm font-semibold backdrop-blur-sm">
                 {roDetail.currentStatus}
@@ -314,7 +336,7 @@ export default function RODetailPage() {
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#002A3A] to-[#00E273] flex items-center justify-center">
                   <Package className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Article Breakdown</h3>
+                <h3 className="text-xl font-bold text-gray-900">{tDetail('articleBreakdown')}</h3>
               </div>
               {hasChanges && (
                 <Button
@@ -323,7 +345,7 @@ export default function RODetailPage() {
                   className="bg-[#00E273] hover:bg-[#00B85E] text-white"
                 >
                   {isSaving ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                  Save Changes
+                  {tDetail('saveChanges')}
                 </Button>
               )}
             </div>
@@ -332,8 +354,8 @@ export default function RODetailPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 bg-gray-50/50">
-                    <th className="py-4 px-6">Article</th>
-                    <th className="py-4 px-4 text-center">Requested</th>
+                    <th className="py-4 px-6">{t('table.artikel')}</th>
+                    <th className="py-4 px-4 text-center">{tDetail('requested')}</th>
                     <th className="py-4 px-4 text-center text-blue-600">DDD</th>
                     <th className="py-4 px-4 text-center text-purple-600">LJBB</th>
                     <th className="py-4 px-4 text-center text-amber-600">MBB</th>
@@ -398,7 +420,7 @@ export default function RODetailPage() {
                     }, { ddd: 0, ljbb: 0, mbb: 0, ubb: 0 });
                     return (
                       <tr className="bg-gray-50 font-semibold border-t-2 border-gray-200">
-                        <td className="py-4 px-6 text-gray-700">Total</td>
+                        <td className="py-4 px-6 text-gray-700">{tDetail('total')}</td>
                         <td className="py-4 px-4 text-center text-gray-900">{roDetail.totalBoxes}</td>
                         <td className="py-4 px-4 text-center text-blue-700">{totals.ddd}</td>
                         <td className="py-4 px-4 text-center text-purple-700">{totals.ljbb}</td>
@@ -421,14 +443,30 @@ export default function RODetailPage() {
       <Header />
       
       <main className="container mx-auto px-6 py-8">
-        <Button
-          onClick={() => router.push('/en/ro')}
-          variant="ghost"
-          className="mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to RO List
-        </Button>
+        <div className="flex items-center justify-between mb-6">
+          <Button
+            onClick={() => router.push('/en/ro')}
+            variant="ghost"
+          >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              {tDetail('backToList')}
+            </Button>
+            <Button
+              onClick={() => window.print()}
+              variant="outline"
+              className="no-print border-2 border-[#002A3A] hover:bg-[#002A3A] hover:text-white"
+            >
+              <Printer className="w-4 h-4 mr-2" />
+              {tCommon('print')} RO Details
+            </Button>
+        </div>
+
+        <div className="print-only print-header">
+          <div className="print-logo">ZUMA WMS - Replenishment Order</div>
+          <div className="print-timestamp">
+            Printed: {new Date().toLocaleString()}
+          </div>
+        </div>
 
         <div className="bg-gradient-to-br from-[#002A3A] to-[#003847] rounded-2xl p-8 text-white mb-8 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32" />
@@ -440,7 +478,7 @@ export default function RODetailPage() {
             <div className="flex flex-wrap items-center gap-6 text-sm opacity-90">
               <span className="flex items-center gap-2">
                 <Package className="w-4 h-4" />
-                {roDetail.totalArticles} articles
+                {roDetail.totalArticles} {tDetail('articles')}
               </span>
               <span className="flex items-center gap-2">
                 <Box className="w-4 h-4" />
@@ -454,22 +492,22 @@ export default function RODetailPage() {
             <div className="mt-4 flex flex-wrap gap-2">
               {roDetail.dddBoxes > 0 && (
                 <span className="px-3 py-1.5 bg-blue-500/20 backdrop-blur-sm rounded-lg text-sm font-semibold border border-blue-400/30">
-                  DDD: {roDetail.dddBoxes} boxes
+                  DDD: {roDetail.dddBoxes} {t('table.boxes')}
                 </span>
               )}
               {roDetail.ljbbBoxes > 0 && (
                 <span className="px-3 py-1.5 bg-purple-500/20 backdrop-blur-sm rounded-lg text-sm font-semibold border border-purple-400/30">
-                  LJBB: {roDetail.ljbbBoxes} boxes
+                  LJBB: {roDetail.ljbbBoxes} {t('table.boxes')}
                 </span>
               )}
               {roDetail.mbbBoxes > 0 && (
                 <span className="px-3 py-1.5 bg-amber-500/20 backdrop-blur-sm rounded-lg text-sm font-semibold border border-amber-400/30">
-                  MBB: {roDetail.mbbBoxes} boxes
+                  MBB: {roDetail.mbbBoxes} {t('table.boxes')}
                 </span>
               )}
               {roDetail.ubbBoxes > 0 && (
                 <span className="px-3 py-1.5 bg-emerald-500/20 backdrop-blur-sm rounded-lg text-sm font-semibold border border-emerald-400/30">
-                  UBB: {roDetail.ubbBoxes} boxes
+                  UBB: {roDetail.ubbBoxes} {t('table.boxes')}
                 </span>
               )}
             </div>
@@ -484,17 +522,17 @@ export default function RODetailPage() {
               </div>
               <div className="flex-1">
                 <label className="block text-lg font-bold text-amber-900 mb-2">
-                  DNPB Number Required
+                  {tDetail('dnpbRequired')}
                 </label>
                 <Input
                   type="text"
-                  placeholder="DNPB/DDD/WHS/2026/I/001"
+                  placeholder={tDetail('dnpbPlaceholder')}
                   value={dnpbInput}
                   onChange={(e) => setDnpbInput(e.target.value)}
                   className="border-amber-300 focus:border-amber-500 focus:ring-amber-500 bg-white"
                 />
                 {roDetail.dnpbNumber && (
-                  <p className="mt-2 text-sm text-amber-700">Current: <span className="font-mono font-semibold">{roDetail.dnpbNumber}</span></p>
+                  <p className="mt-2 text-sm text-amber-700">{tDetail('current')}: <span className="font-mono font-semibold">{roDetail.dnpbNumber}</span></p>
                 )}
               </div>
             </div>
@@ -502,11 +540,11 @@ export default function RODetailPage() {
         )}
 
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#002A3A] to-[#00E273] flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-white" />
             </div>
-            Order Progress
+            {tDetail('orderProgress')}
           </h2>
           
           <div className="space-y-0">
@@ -540,14 +578,14 @@ export default function RODetailPage() {
                   
                   <div className={`pb-12 ${index === statusFlow.length - 1 ? 'pb-0' : ''}`}>
                     <p className={`text-lg font-bold mb-1 ${isCompleted ? 'text-gray-900' : 'text-gray-400'}`}>
-                      {status.label}
+                      {tStatus(status.statusKey)}
                     </p>
-                    <p className="text-sm text-gray-500 mb-2">{status.description}</p>
+                    <p className="text-sm text-gray-500 mb-2">{tDetail(`statusDescriptions.${status.descKey}`)}</p>
                     
                     {isCurrent && (
                       <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[#00E273]/10 to-[#00B85E]/10 text-[#00E273] text-sm rounded-lg font-semibold border border-[#00E273]/20">
                         <div className="w-2 h-2 rounded-full bg-[#00E273] animate-pulse" />
-                        Current Status
+                        {tDetail('currentStatus')}
                       </span>
                     )}
                   </div>
@@ -564,9 +602,9 @@ export default function RODetailPage() {
             className="flex-1 h-14 text-base border-2 border-gray-200 hover:border-[#002A3A] hover:bg-gray-50"
           >
             <Package className="w-5 h-5 mr-2" />
-            View Articles
+            {tDetail('viewArticles')}
           </Button>
-          <Button 
+          <Button
             onClick={handleAdvanceStatus}
             disabled={isUpdating || currentStatusIndex >= statusFlow.length - 1}
             className="flex-1 h-14 text-base bg-gradient-to-r from-[#00E273] to-[#00B85E] hover:from-[#00B85E] hover:to-[#00E273] text-white shadow-lg shadow-[#00E273]/30 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -575,7 +613,7 @@ export default function RODetailPage() {
               <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
             ) : (
               <>
-                Next Stage
+                {tDetail('nextStage')}
                 <ChevronRight className="w-5 h-5 ml-2" />
               </>
             )}

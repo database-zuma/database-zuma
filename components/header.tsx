@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/contexts/auth-context";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -11,6 +11,7 @@ export function Header() {
   const router = useRouter();
   const t = useTranslations("auth.logout");
   const tNav = useTranslations("navigation");
+  const tHeader = useTranslations("header");
 
   const handleLogout = async () => {
     await signOut();
@@ -43,7 +44,7 @@ export function Header() {
                 <h1 className="text-xl font-bold bg-gradient-to-r from-[#002A3A] to-[#00E273] bg-clip-text text-transparent">
                   Zuma WMS
                 </h1>
-                <p className="text-xs text-gray-500">Warehouse Management</p>
+              <p className="text-xs text-gray-500">{tHeader("warehouseManagement")}</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -87,7 +88,7 @@ export function Header() {
               <h1 className="text-xl font-bold bg-gradient-to-r from-[#002A3A] to-[#00E273] bg-clip-text text-transparent">
                 Zuma WMS
               </h1>
-              <p className="text-xs text-gray-500">Warehouse Management</p>
+              <p className="text-xs text-gray-500">{tHeader("warehouseManagement")}</p>
             </div>
           </div>
 

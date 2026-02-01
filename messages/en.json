@@ -122,6 +122,7 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Real-time warehouse intelligence",
+    "rbacMessage": "Welcome to Zuma WMS Extended. RBAC system is now active.",
     "metrics": {
       "totalStock": "Total Stock",
       "lowStock": "Low Stock Items",
@@ -151,6 +152,7 @@
     "title": "Transactions",
     "newTransaction": "New Transaction",
     "warehouseTitle": "Warehouse Transactions",
+    "forWarehouse": "Transaction data for {warehouse} warehouse will be displayed here.",
     "table": {
       "id": "Transaction ID",
       "no": "No",
@@ -203,6 +205,7 @@
   "stock": {
     "title": "Current Stock",
     "subtitle": "Real-time inventory across all warehouses",
+    "comingSoon": "Real-time inventory across all warehouses (Coming Soon)",
     "overview": "Stock Overview",
     "filters": {
       "title": "Filters & Search",
@@ -290,9 +293,25 @@
   },
   "ro": {
     "title": "Receiving Orders",
+    "replenishmentTitle": "Replenishment Orders",
     "newRO": "New Receiving Order",
     "editRO": "Edit Receiving Order",
     "details": "RO Details",
+    "subtitle": "Manage store replenishment requests and fulfillment",
+    "refresh": "Refresh",
+    "stats": {
+      "totalRO": "Total RO",
+      "queued": "Queued",
+      "totalBoxes": "Total Boxes",
+      "totalPairs": "Total Pairs"
+    },
+    "filters": {
+      "all": "All",
+      "ongoing": "Ongoing",
+      "shipping": "Shipping",
+      "complete": "Complete",
+      "searchPlaceholder": "Search RO ID or Store..."
+    },
     "table": {
       "roNumber": "RO Number",
       "poReference": "PO Reference",
@@ -303,7 +322,17 @@
       "totalQuantity": "Total Quantity",
       "status": "Status",
       "createdBy": "Created By",
-      "notes": "Notes"
+      "notes": "Notes",
+      "roId": "RO ID",
+      "store": "Store",
+      "boxes": "Boxes",
+      "action": "Action",
+      "ordersFound": "{count} orders found",
+      "loadingOrders": "Loading orders...",
+      "noROFound": "No RO requests found",
+      "adjustFilters": "Try adjusting your filters",
+      "viewDetails": "View Details →",
+      "allOrders": "All Replenishment Orders"
     },
     "status": {
       "draft": "Draft",
@@ -312,7 +341,46 @@
       "partiallyReceived": "Partially Received",
       "received": "Received",
       "cancelled": "Cancelled",
-      "closed": "Closed"
+      "closed": "Closed",
+      "queue": "Queue",
+      "approved": "Approved",
+      "picking": "Picking",
+      "pickVerified": "Verified",
+      "dnpbProcess": "DNPB",
+      "readyToShip": "Ready",
+      "inDelivery": "Delivery",
+      "arrived": "Arrived",
+      "completed": "Complete"
+    },
+    "detail": {
+      "backToList": "Back to RO List",
+      "backToDetail": "Back to RO Detail",
+      "articleBreakdown": "Article Breakdown",
+      "orderProgress": "Order Progress",
+      "viewArticles": "View Articles",
+      "nextStage": "Next Stage",
+      "saveChanges": "Save Changes",
+      "dnpbRequired": "DNPB Number Required",
+      "dnpbPlaceholder": "DNPB/DDD/WHS/2026/I/001",
+      "current": "Current",
+      "articles": "articles",
+      "requested": "Requested",
+      "total": "Total",
+      "notFound": "RO Not Found",
+      "notFoundDescription": "The requested RO does not exist",
+      "unsavedChanges": "You have unsaved changes. Discard them?",
+      "statusDescriptions": {
+        "queue": "Awaiting approval",
+        "approved": "WH Supervisor approved",
+        "picking": "Being picked from warehouse",
+        "pickVerified": "Pick quantities verified",
+        "dnpbProcess": "Delivery note processing",
+        "readyToShip": "Ready for dispatch",
+        "inDelivery": "Out for delivery",
+        "arrived": "Received at store",
+        "completed": "Order closed"
+      },
+      "currentStatus": "Current Status"
     },
     "actions": {
       "create": "Create RO",
@@ -346,7 +414,15 @@
       "confirmed": "Receiving order confirmed",
       "received": "Items received successfully",
       "cancelled": "Receiving order cancelled",
-      "closed": "Receiving order closed"
+      "closed": "Receiving order closed",
+      "alreadyCompleted": "Order already completed",
+      "advanceConfirm": "Advance status to \"{status}\"?",
+      "dnpbRequired": "DNPB Number is required before proceeding",
+      "dnpbError": "DNPB Error",
+      "saveSuccess": "Changes saved successfully",
+      "saveFailed": "Failed to save changes",
+      "statusUpdated": "Status updated to {status}",
+      "statusUpdateFailed": "Failed to update status"
     }
   },
   "language": {
@@ -354,5 +430,8 @@
     "select": "Select Language",
     "english": "English",
     "indonesian": "Bahasa Indonesia"
+  },
+  "header": {
+    "warehouseManagement": "Warehouse Management"
   }
 }
