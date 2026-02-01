@@ -1,0 +1,358 @@
+{
+  "metadata": {
+    "title": "Zuma WMS Extended",
+    "description": "Sistem manajemen gudang desktop"
+  },
+  "common": {
+    "buttons": {
+      "save": "Simpan",
+      "cancel": "Batal",
+      "delete": "Hapus",
+      "edit": "Ubah",
+      "create": "Buat",
+      "submit": "Kirim",
+      "close": "Tutup",
+      "back": "Kembali",
+      "next": "Selanjutnya",
+      "previous": "Sebelumnya",
+      "confirm": "Konfirmasi",
+      "search": "Cari",
+      "filter": "Filter",
+      "clear": "Bersihkan",
+      "refresh": "Segarkan",
+      "download": "Unduh",
+      "upload": "Unggah",
+      "export": "Ekspor",
+      "import": "Impor",
+      "print": "Cetak",
+      "view": "Lihat",
+      "actions": "Aksi",
+      "apply": "Terapkan",
+      "reset": "Reset"
+    },
+    "labels": {
+      "loading": "Memuat...",
+      "noData": "Tidak ada data",
+      "error": "Error",
+      "success": "Berhasil",
+      "warning": "Peringatan",
+      "info": "Informasi",
+      "required": "Wajib diisi",
+      "optional": "Opsional",
+      "all": "Semua",
+      "none": "Tidak ada",
+      "select": "Pilih",
+      "selectAll": "Pilih Semua",
+      "deselectAll": "Batal Pilih Semua",
+      "show": "Tampilkan",
+      "hide": "Sembunyikan",
+      "more": "Lebih banyak",
+      "less": "Lebih sedikit",
+      "from": "Dari",
+      "to": "Sampai",
+      "date": "Tanggal",
+      "time": "Waktu",
+      "status": "Status",
+      "type": "Tipe",
+      "category": "Kategori",
+      "description": "Deskripsi",
+      "notes": "Catatan",
+      "createdAt": "Dibuat Pada",
+      "updatedAt": "Diubah Pada",
+      "createdBy": "Dibuat Oleh",
+      "updatedBy": "Diubah Oleh"
+    },
+    "pagination": {
+      "showing": "Menampilkan",
+      "of": "dari",
+      "results": "hasil",
+      "perPage": "per halaman",
+      "first": "Pertama",
+      "last": "Terakhir"
+    },
+    "table": {
+      "noResults": "Tidak ada hasil",
+      "sortAscending": "Urutkan naik",
+      "sortDescending": "Urutkan turun"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Masuk ke akun Anda",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Ingat saya",
+      "forgotPassword": "Lupa password?",
+      "submit": "Masuk",
+      "noAccount": "Belum punya akun?",
+      "register": "Daftar"
+    },
+    "logout": {
+      "title": "Logout",
+      "confirm": "Apakah Anda yakin ingin logout?",
+      "success": "Berhasil logout"
+    },
+    "errors": {
+      "invalidCredentials": "Email atau password salah",
+      "accountLocked": "Akun terkunci. Silakan hubungi administrator",
+      "sessionExpired": "Sesi Anda telah berakhir. Silakan login kembali",
+      "unauthorized": "Akses tidak diizinkan",
+      "emailRequired": "Email wajib diisi",
+      "passwordRequired": "Password wajib diisi",
+      "invalidEmail": "Masukkan email yang valid",
+      "passwordTooShort": "Password minimal 8 karakter"
+    }
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "transactions": "Transaksi",
+    "stock": "Stok",
+    "ro": "Receiving Order",
+    "po": "Purchase Order",
+    "reports": "Laporan",
+    "settings": "Pengaturan",
+    "profile": "Profil",
+    "users": "Pengguna",
+    "warehouse": "Gudang",
+    "products": "Produk",
+    "suppliers": "Supplier",
+    "customers": "Pelanggan"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Intelijen gudang real-time",
+    "metrics": {
+      "totalStock": "Total Stok",
+      "lowStock": "Stok Menipis",
+      "pendingRO": "RO Tertunda",
+      "todayTransactions": "Transaksi Hari Ini",
+      "stockValue": "Nilai Stok",
+      "incomingShipments": "Pengiriman Masuk"
+    },
+    "charts": {
+      "stockByCategory": "Stok per Kategori",
+      "transactionTrend": "Tren Transaksi",
+      "topProducts": "Produk Teratas",
+      "warehouseCapacity": "Distribusi Stok Gudang"
+    },
+    "recentActivity": {
+      "title": "Aktivitas Terbaru",
+      "viewAll": "Lihat semua aktivitas"
+    },
+    "alerts": {
+      "title": "Peringatan",
+      "lowStockAlert": "Peringatan stok menipis",
+      "pendingApproval": "Menunggu persetujuan",
+      "overdueRO": "Receiving order terlambat"
+    }
+  },
+  "transactions": {
+    "title": "Transaksi",
+    "newTransaction": "Transaksi Baru",
+    "warehouseTitle": "Transaksi Gudang",
+    "table": {
+      "id": "ID Transaksi",
+      "no": "No",
+      "tanggal": "Tanggal",
+      "artikel": "Artikel",
+      "namaBarang": "Nama Barang",
+      "transaksiIn": "Masuk",
+      "transaksiOut": "Keluar",
+      "gudangAsal": "Gudang Asal",
+      "gudangTerima": "Gudang Terima",
+      "dnpb": "DNPB",
+      "noSO": "No. SO",
+      "bstDn": "BST/DN",
+      "noPO": "No. PO",
+      "noLPB": "No. LPB",
+      "remaks": "Keterangan",
+      "type": "Tipe",
+      "reference": "Referensi",
+      "product": "Produk",
+      "quantity": "Jumlah",
+      "warehouse": "Gudang",
+      "date": "Tanggal",
+      "user": "Pengguna",
+      "status": "Status"
+    },
+    "types": {
+      "inbound": "Masuk",
+      "outbound": "Keluar",
+      "transfer": "Transfer",
+      "adjustment": "Penyesuaian",
+      "return": "Retur"
+    },
+    "filters": {
+      "dateRange": "Rentang Tanggal",
+      "transactionType": "Tipe Transaksi",
+      "warehouse": "Gudang",
+      "product": "Produk",
+      "article": "Artikel",
+      "searchPlaceholder": "Cari berdasarkan artikel atau nama barang...",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Akhir",
+      "clearFilters": "Hapus Filter"
+    },
+    "warehouses": {
+      "ddd": "Gudang DDD",
+      "ljbb": "Gudang LJBB",
+      "mbb": "Gudang MBB"
+    }
+  },
+  "stock": {
+    "title": "Stok Saat Ini",
+    "subtitle": "Inventori real-time di semua gudang",
+    "overview": "Ikhtisar Stok",
+    "filters": {
+      "title": "Filter & Pencarian",
+      "subtitle": "Persempit tampilan stok Anda",
+      "showFilters": "Tampilkan Filter",
+      "hideFilters": "Sembunyikan Filter",
+      "searchArticle": "Cari Artikel",
+      "searchPlaceholder": "Kode atau nama...",
+      "warehouse": "Gudang (Entitas)",
+      "allWarehouses": "Semua Gudang",
+      "tierLevel": "Level Tier",
+      "allTiers": "Semua Tier",
+      "gender": "Gender",
+      "allGenders": "Semua Gender",
+      "men": "Pria",
+      "women": "Wanita",
+      "unisex": "Unisex",
+      "series": "Seri",
+      "seriesPlaceholder": "Masukkan seri...",
+      "resetFilters": "Reset Filter",
+      "activeFilters": "Filter Aktif"
+    },
+    "columnGroups": {
+      "identity": "Info Artikel",
+      "ddd": "Gudang DDD",
+      "ljbb": "Gudang LJBB",
+      "mbb": "Gudang MBB",
+      "ubb": "Gudang UBB",
+      "totals": "Semua Gudang"
+    },
+    "table": {
+      "entitas": "Entitas",
+      "articleCode": "Kode Artikel",
+      "articleName": "Nama Artikel",
+      "tier": "Tier",
+      "type": "Tipe",
+      "gender": "Gender",
+      "series": "Seri",
+      "initial": "Awal",
+      "in": "Masuk",
+      "out": "Keluar",
+      "ro": "RO",
+      "final": "Akhir",
+      "totalInitial": "Total Awal",
+      "totalIn": "Total Masuk",
+      "totalOut": "Total Keluar",
+      "totalRO": "Total RO",
+      "totalFinal": "Total Akhir",
+      "sku": "SKU",
+      "productName": "Nama Produk",
+      "category": "Kategori",
+      "warehouse": "Gudang",
+      "quantity": "Jumlah",
+      "available": "Tersedia",
+      "reserved": "Dipesan",
+      "location": "Lokasi",
+      "minLevel": "Level Minimum",
+      "maxLevel": "Level Maksimum",
+      "reorderPoint": "Titik Pemesanan Ulang",
+      "unit": "Satuan",
+      "batch": "Batch",
+      "expiryDate": "Tanggal Kadaluarsa"
+    },
+    "status": {
+      "inStock": "Tersedia",
+      "lowStock": "Stok Menipis",
+      "outOfStock": "Habis",
+      "overstock": "Kelebihan Stok"
+    },
+    "actions": {
+      "adjustStock": "Sesuaikan Stok",
+      "transferStock": "Transfer Stok",
+      "viewHistory": "Lihat Riwayat",
+      "printLabel": "Cetak Label"
+    },
+    "loading": "Memuat data stok...",
+    "pagination": {
+      "showing": "Menampilkan",
+      "to": "sampai",
+      "of": "dari",
+      "items": "item",
+      "previous": "Sebelumnya",
+      "next": "Selanjutnya"
+    }
+  },
+  "ro": {
+    "title": "Receiving Order",
+    "newRO": "RO Baru",
+    "editRO": "Ubah RO",
+    "details": "Detail RO",
+    "table": {
+      "roNumber": "Nomor RO",
+      "poReference": "Referensi PO",
+      "supplier": "Supplier",
+      "expectedDate": "Tanggal Diharapkan",
+      "receivedDate": "Tanggal Diterima",
+      "items": "Item",
+      "totalQuantity": "Total Jumlah",
+      "status": "Status",
+      "createdBy": "Dibuat Oleh",
+      "notes": "Catatan"
+    },
+    "status": {
+      "draft": "Draft",
+      "pending": "Tertunda",
+      "confirmed": "Dikonfirmasi",
+      "partiallyReceived": "Diterima Sebagian",
+      "received": "Diterima",
+      "cancelled": "Dibatalkan",
+      "closed": "Ditutup"
+    },
+    "actions": {
+      "create": "Buat RO",
+      "confirm": "Konfirmasi",
+      "receive": "Terima",
+      "receiveAll": "Terima Semua",
+      "cancel": "Batalkan",
+      "close": "Tutup",
+      "print": "Cetak RO",
+      "email": "Email Supplier"
+    },
+    "form": {
+      "selectSupplier": "Pilih Supplier",
+      "selectPO": "Pilih Purchase Order",
+      "expectedDelivery": "Tanggal Pengiriman Diharapkan",
+      "addItem": "Tambah Item",
+      "removeItem": "Hapus Item",
+      "product": "Produk",
+      "orderedQty": "Jumlah Dipesan",
+      "receivedQty": "Jumlah Diterima",
+      "acceptQty": "Jumlah Diterima",
+      "rejectQty": "Jumlah Ditolak",
+      "rejectReason": "Alasan Penolakan",
+      "damagedQty": "Jumlah Rusak",
+      "batchNumber": "Nomor Batch",
+      "expiryDate": "Tanggal Kadaluarsa"
+    },
+    "messages": {
+      "created": "Receiving order berhasil dibuat",
+      "updated": "Receiving order berhasil diubah",
+      "confirmed": "Receiving order dikonfirmasi",
+      "received": "Item berhasil diterima",
+      "cancelled": "Receiving order dibatalkan",
+      "closed": "Receiving order ditutup"
+    }
+  },
+  "language": {
+    "title": "Bahasa",
+    "select": "Pilih Bahasa",
+    "english": "English",
+    "indonesian": "Bahasa Indonesia"
+  }
+}
