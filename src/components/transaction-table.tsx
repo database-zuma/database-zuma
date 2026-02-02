@@ -29,7 +29,6 @@ interface ColumnDef {
   key: string;
   label: string;
   align?: "left" | "right";
-  width?: string;
 }
 
 interface TransactionTableProps {
@@ -38,22 +37,10 @@ interface TransactionTableProps {
   entityName: string;
 }
 
-const defaultColumnWidths: Record<string, string> = {
-  No: "60px",
-  Tanggal: "100px",
-  Artikel: "120px",
-  "Nama Barang": "200px",
-  "Transaksi in": "100px",
-  "transaksi out": "100px",
-  "Gudang Asal": "120px",
-  "Gudang Terima": "120px",
-  DNPB: "180px",
-  "No. SO": "120px",
-  "BST/DN": "100px",
-  "NO PO": "150px",
-  "NO LPB": "150px",
-  Remaks: "150px",
-};
+interface ExpandedCell {
+  rowIndex: number;
+  colKey: string;
+}
 
 export function TransactionTable({
   data,
@@ -63,6 +50,7 @@ export function TransactionTable({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [sort, setSort] = useState<SortState>({ key: null, direction: null });
+  const [expandedCell, setExpandedCell] = useState<ExpandedCell | null>(null);
 
   const handleSort = (key: string) => {
     setSort((prev) => ({
@@ -76,6 +64,14 @@ export function TransactionTable({
               : "asc"
           : "asc",
     }));
+  };
+
+  const handleCellClick = (rowIndex: number, colKey: string) => {
+    setExpandedCell(
+      expandedCell?.rowIndex === rowIndex && expandedCell?.colKey === colKey
+        ? null
+        : { rowIndex, colKey }
+    );
   };
 
   const sortedData = useMemo(() => {
@@ -113,10 +109,6 @@ export function TransactionTable({
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = sortedData.slice(startIndex, endIndex);
 
-  const getColumnWidth = (col: ColumnDef) => {
-    return col.width || defaultColumnWidths[col.key] || "150px";
-  };
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -126,8 +118,8 @@ export function TransactionTable({
         </p>
       </div>
 
-      <div className="border rounded-md">
-        <div className="overflow-x-auto">
+      <div className="border rounded-md w-full">
+        <div style={{ maxHeight: "calc(100vh - 280px)" }} className="overflow-y-auto">
           <table className="w-full caption-bottom text-sm border-collapse">
             <thead className="[&_tr]:border-b">
               <tr className="hover:bg-transparent border-b transition-colors">
@@ -135,21 +127,19 @@ export function TransactionTable({
                   <th
                     key={col.key}
                     style={{ 
-                      width: getColumnWidth(col), 
-                      minWidth: getColumnWidth(col),
                       position: "sticky",
                       top: 0,
                       left: colIndex === 0 ? 0 : undefined,
                       zIndex: colIndex === 0 ? 30 : 20,
                       backgroundColor: "hsl(var(--muted))",
                     }}
-                    className={`text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 ${
+                    className={`text-foreground h-10 px-2 text-left align-middle font-medium cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 ${
                       col.align === "right" ? "text-right" : ""
                     }`}
                     onClick={() => handleSort(col.key)}
                   >
                     <div className="flex items-center gap-1">
-                      <span className="break-words leading-tight">{col.label}</span>
+                      <span className="leading-tight truncate max-w-[150px]">{col.label}</span>
                       {sort.key === col.key &&
                         (sort.direction === "asc" ? (
                           <ChevronUp className="h-4 w-4 shrink-0" />
@@ -161,10 +151,6 @@ export function TransactionTable({
                 ))}
               </tr>
             </thead>
-          </table>
-        </div>
-        <div className="overflow-auto" style={{ maxHeight: "calc(100vh - 320px)" }}>
-          <table className="w-full caption-bottom text-sm border-collapse">
             <tbody className="[&_tr:last-child]:border-0">
               {paginatedData.length === 0 ? (
                 <tr>
@@ -178,28 +164,33 @@ export function TransactionTable({
               ) : (
                 paginatedData.map((row, idx) => (
                   <tr key={idx} className="hover:bg-muted/50 border-b transition-colors">
-                    {columns.map((col, colIndex) => (
-                      <td
-                        key={col.key}
-                        style={{ 
-                          width: getColumnWidth(col), 
-                          minWidth: getColumnWidth(col),
-                          position: colIndex === 0 ? "sticky" : undefined,
-                          left: colIndex === 0 ? 0 : undefined,
-                          zIndex: colIndex === 0 ? 25 : undefined,
-                          backgroundColor: colIndex === 0 ? "hsl(var(--background))" : undefined,
-                        }}
-                        className={`p-2 align-middle border-r border-border last:border-r-0 ${
-                          col.align === "right" ? "text-right" : ""
-                        }`}
-                      >
-                        <span className="break-words whitespace-normal leading-relaxed">
-                          {row[col.key] !== null && row[col.key] !== undefined
-                            ? String(row[col.key])
-                            : "-"}
-                        </span>
-                      </td>
-                    ))}
+                    {columns.map((col, colIndex) => {
+                      const cellValue = row[col.key] !== null && row[col.key] !== undefined
+                        ? String(row[col.key])
+                        : "-";
+                      const isExpanded = expandedCell?.rowIndex === idx && expandedCell?.colKey === col.key;
+                      
+                      return (
+                        <td
+                          key={col.key}
+                          style={{ 
+                            position: colIndex === 0 ? "sticky" : undefined,
+                            left: colIndex === 0 ? 0 : undefined,
+                            zIndex: colIndex === 0 ? 25 : undefined,
+                            backgroundColor: colIndex === 0 ? "hsl(var(--background))" : undefined,
+                          }}
+                          className={`p-2 align-middle border-r border-border last:border-r-0 cursor-pointer ${
+                            col.align === "right" ? "text-right" : ""
+                          }`}
+                          onClick={() => handleCellClick(idx, col.key)}
+                          title={isExpanded ? "Click to collapse" : "Click to expand"}
+                        >
+                          <span className={`leading-relaxed ${isExpanded ? "whitespace-normal break-all" : "truncate block max-w-[200px]"}`}>
+                            {cellValue}
+                          </span>
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))
               )}
