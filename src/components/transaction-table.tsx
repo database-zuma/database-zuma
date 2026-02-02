@@ -74,6 +74,7 @@ export function TransactionTable({
   const topScrollRef = useRef<HTMLDivElement>(null);
   const tableScrollRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLTableElement>(null);
+  const isSyncing = useRef(false);
   const [tableWidth, setTableWidth] = useState(0);
 
   useEffect(() => {
@@ -132,15 +133,21 @@ export function TransactionTable({
   const paginatedData = sortedData.slice(startIndex, endIndex);
 
   const handleTopScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (isSyncing.current) return;
+    isSyncing.current = true;
     if (tableScrollRef.current) {
       tableScrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
     }
+    setTimeout(() => { isSyncing.current = false; }, 0);
   };
 
   const handleTableScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (isSyncing.current) return;
+    isSyncing.current = true;
     if (topScrollRef.current) {
       topScrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
     }
+    setTimeout(() => { isSyncing.current = false; }, 0);
   };
 
   const getColumnWidth = (col: ColumnDef) => {
@@ -160,7 +167,7 @@ export function TransactionTable({
         <div
           ref={topScrollRef}
           onScroll={handleTopScroll}
-          className="overflow-x-auto border-b bg-muted/50"
+          className="overflow-x-scroll border-b bg-muted/50"
           style={{ height: "16px" }}
         >
           <div style={{ width: `${tableWidth}px`, height: "1px" }} />
@@ -172,15 +179,15 @@ export function TransactionTable({
           className="overflow-x-auto max-h-[calc(100vh-280px)]"
         >
           <Table ref={tableRef}>
-            <TableHeader className="bg-muted sticky top-0 z-10">
-              <TableRow>
-                {columns.map((col) => (
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                {columns.map((col, colIndex) => (
                   <TableHead
                     key={col.key}
                     style={{ width: getColumnWidth(col), minWidth: getColumnWidth(col) }}
-                    className={`cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 ${
+                    className={`cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 bg-muted sticky top-0 z-20 ${
                       col.align === "right" ? "text-right" : ""
-                    }`}
+                    } ${colIndex === 0 ? "sticky left-0 z-30" : ""}`}
                     onClick={() => handleSort(col.key)}
                   >
                     <div className="flex items-center gap-1">
@@ -208,14 +215,14 @@ export function TransactionTable({
                 </TableRow>
               ) : (
                 paginatedData.map((row, idx) => (
-                  <TableRow key={idx}>
-                    {columns.map((col) => (
+                  <TableRow key={idx} className="hover:bg-muted/50">
+                    {columns.map((col, colIndex) => (
                       <TableCell
                         key={col.key}
                         style={{ width: getColumnWidth(col), minWidth: getColumnWidth(col) }}
-                        className={`border-r border-border last:border-r-0 align-top ${
+                        className={`border-r border-border last:border-r-0 align-top bg-background ${
                           col.align === "right" ? "text-right" : ""
-                        }`}
+                        } ${colIndex === 0 ? "sticky left-0 z-10 bg-background" : ""}`}
                       >
                         <span className="break-words whitespace-normal leading-relaxed">
                           {row[col.key] !== null && row[col.key] !== undefined
@@ -232,7 +239,7 @@ export function TransactionTable({
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Rows per page:</span>
           <Select
