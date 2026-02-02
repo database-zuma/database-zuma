@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Settings,
   User,
+  Warehouse,
   type LucideIcon,
 } from "lucide-react";
 
@@ -30,11 +31,6 @@ export const sidebarItems: NavGroup[] = [
         icon: LayoutDashboard,
       },
       {
-        title: "Transaksi",
-        url: "/dashboard/crm",
-        icon: ChartBar,
-      },
-      {
         title: "RO Process",
         url: "/dashboard/finance",
         icon: Banknote,
@@ -43,6 +39,32 @@ export const sidebarItems: NavGroup[] = [
   },
   {
     id: 2,
+    label: "Replenishment Orders",
+    items: [
+      {
+        title: "Transaksi DDD",
+        url: "/dashboard/transaksi-ddd",
+        icon: Warehouse,
+      },
+      {
+        title: "Transaksi LJBB",
+        url: "/dashboard/transaksi-ljbb",
+        icon: Warehouse,
+      },
+      {
+        title: "Transaksi MBB",
+        url: "/dashboard/transaksi-mbb",
+        icon: Warehouse,
+      },
+      {
+        title: "Transaksi UBB",
+        url: "/dashboard/transaksi-ubb",
+        icon: Warehouse,
+      },
+    ],
+  },
+  {
+    id: 3,
     label: "Account",
     items: [
       {
