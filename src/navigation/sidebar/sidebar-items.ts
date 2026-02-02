@@ -30,16 +30,11 @@ export const sidebarItems: NavGroup[] = [
         url: "/dashboard/default",
         icon: LayoutDashboard,
       },
-      {
-        title: "RO Process",
-        url: "/dashboard/finance",
-        icon: Banknote,
-      },
     ],
   },
   {
     id: 2,
-    label: "Replenishment Orders",
+    label: "Raw Table",
     items: [
       {
         title: "Transaksi DDD",
@@ -65,6 +60,17 @@ export const sidebarItems: NavGroup[] = [
   },
   {
     id: 3,
+    label: "Replenishment Orders",
+    items: [
+      {
+        title: "RO Process",
+        url: "/dashboard/finance",
+        icon: Banknote,
+      },
+    ],
+  },
+  {
+    id: 4,
     label: "Account",
     items: [
       {
