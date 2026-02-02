@@ -126,14 +126,14 @@ export function TransactionTable({
                 {columns.map((col, colIndex) => (
                   <th
                     key={col.key}
-                    style={{ 
+                    style={{
                       position: "sticky",
                       top: 0,
                       left: colIndex === 0 ? 0 : undefined,
                       zIndex: colIndex === 0 ? 30 : 20,
-                      backgroundColor: "hsl(var(--muted))",
+                      backgroundColor: "#f3f4f6",
                     }}
-                    className={`text-foreground h-10 px-2 text-left align-middle font-medium cursor-pointer border-r border-border last:border-r-0 bg-muted ${
+                    className={`text-foreground h-10 px-2 text-left align-middle font-medium cursor-pointer border-r border-border last:border-r-0 ${
                       col.align === "right" ? "text-right" : ""
                     }`}
                     onClick={() => handleSort(col.key)}
@@ -173,14 +173,15 @@ export function TransactionTable({
                       return (
                         <td
                           key={col.key}
-                          style={{ 
+                          style={{
                             position: colIndex === 0 ? "sticky" : undefined,
                             left: colIndex === 0 ? 0 : undefined,
                             zIndex: colIndex === 0 ? 25 : undefined,
+                            backgroundColor: colIndex === 0 ? "#ffffff" : undefined,
                           }}
                           className={`p-2 align-middle border-r border-border last:border-r-0 cursor-pointer ${
                             col.align === "right" ? "text-right" : ""
-                          } ${colIndex === 0 ? "bg-background" : ""}`}
+                          }`}
                           onClick={() => handleCellClick(idx, col.key)}
                           title={isExpanded ? "Click to collapse" : "Click to expand"}
                         >
