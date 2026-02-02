@@ -149,7 +149,7 @@ export function TransactionTable({
     if (tableScrollRef.current) {
       tableScrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
     }
-    setTimeout(() => { isSyncing.current = false; }, 0);
+    requestAnimationFrame(() => { isSyncing.current = false; });
   };
 
   const handleTableScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -158,7 +158,7 @@ export function TransactionTable({
     if (topScrollRef.current) {
       topScrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
     }
-    setTimeout(() => { isSyncing.current = false; }, 0);
+    requestAnimationFrame(() => { isSyncing.current = false; });
   };
 
   const getColumnWidth = (col: ColumnDef) => {
@@ -174,21 +174,30 @@ export function TransactionTable({
         </p>
       </div>
 
-      <div className="border rounded-md relative">
+      <div className="border rounded-md">
         <div
           ref={topScrollRef}
           onScroll={handleTopScroll}
-          className="overflow-x-auto overflow-y-hidden bg-muted border-b"
-          style={{ height: "20px" }}
+          style={{ 
+            overflowX: "auto", 
+            overflowY: "hidden",
+            height: "16px",
+            backgroundColor: "hsl(var(--muted))",
+            borderBottom: "1px solid hsl(var(--border))"
+          }}
         >
-          <div style={{ width: `${tableWidth}px`, minWidth: "100%", height: "20px" }} />
+          <div style={{ width: tableWidth, height: "1px", minWidth: "100%" }} />
         </div>
 
         <div
           ref={tableScrollRef}
           onScroll={handleTableScroll}
-          className="overflow-auto max-h-[calc(100vh-300px)]"
-          <Table ref={tableRef} className="relative">
+          style={{ 
+            overflow: "auto",
+            maxHeight: "calc(100vh - 300px)"
+          }}
+        >
+          <Table ref={tableRef}>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 {columns.map((col, colIndex) => (
@@ -201,8 +210,9 @@ export function TransactionTable({
                       top: 0,
                       left: colIndex === 0 ? 0 : undefined,
                       zIndex: colIndex === 0 ? 30 : 20,
+                      backgroundColor: "hsl(var(--muted))",
                     }}
-                    className={`cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 bg-muted ${
+                    className={`cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 ${
                       col.align === "right" ? "text-right" : ""
                     }`}
                     onClick={() => handleSort(col.key)}
@@ -241,9 +251,10 @@ export function TransactionTable({
                           minWidth: getColumnWidth(col),
                           position: colIndex === 0 ? "sticky" : undefined,
                           left: colIndex === 0 ? 0 : undefined,
-                          zIndex: colIndex === 0 ? 10 : undefined,
+                          zIndex: 10,
+                          backgroundColor: "hsl(var(--background))",
                         }}
-                        className={`border-r border-border last:border-r-0 align-top bg-background ${
+                        className={`border-r border-border last:border-r-0 align-top ${
                           col.align === "right" ? "text-right" : ""
                         }`}
                       >
