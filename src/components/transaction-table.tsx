@@ -178,10 +178,10 @@ export function TransactionTable({
         <div
           ref={topScrollRef}
           onScroll={handleTopScroll}
-          className="overflow-x-auto overflow-y-hidden bg-muted/50 border-b cursor-pointer"
-          style={{ height: "16px" }}
+          className="overflow-x-auto overflow-y-hidden bg-muted border-b"
+          style={{ height: "20px" }}
         >
-          <div style={{ width: `${tableWidth}px`, minWidth: "100%", height: "1px" }} />
+          <div style={{ width: `${tableWidth}px`, minWidth: "100%", height: "20px" }} />
         </div>
 
         <div
