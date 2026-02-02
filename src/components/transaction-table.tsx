@@ -17,14 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 type SortDirection = "asc" | "desc" | null;
 
@@ -134,12 +126,13 @@ export function TransactionTable({
         </p>
       </div>
 
-      <div className="border rounded-md overflow-auto" style={{ maxHeight: "calc(100vh - 280px)" }}>
-          <Table className="[&>[data-slot=table-container]]:overflow-visible">
-            <TableHeader>
-              <TableRow className="hover:bg-transparent">
+      <div className="border rounded-md">
+        <div className="overflow-x-auto">
+          <table className="w-full caption-bottom text-sm border-collapse">
+            <thead className="[&_tr]:border-b">
+              <tr className="hover:bg-transparent border-b transition-colors">
                 {columns.map((col, colIndex) => (
-                  <TableHead
+                  <th
                     key={col.key}
                     style={{ 
                       width: getColumnWidth(col), 
@@ -150,7 +143,7 @@ export function TransactionTable({
                       zIndex: colIndex === 0 ? 30 : 20,
                       backgroundColor: "hsl(var(--muted))",
                     }}
-                    className={`cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 ${
+                    className={`text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 ${
                       col.align === "right" ? "text-right" : ""
                     }`}
                     onClick={() => handleSort(col.key)}
@@ -164,35 +157,39 @@ export function TransactionTable({
                           <ChevronDown className="h-4 w-4 shrink-0" />
                         ) : null)}
                     </div>
-                  </TableHead>
+                  </th>
                 ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div className="overflow-auto" style={{ maxHeight: "calc(100vh - 320px)" }}>
+          <table className="w-full caption-bottom text-sm border-collapse">
+            <tbody className="[&_tr:last-child]:border-0">
               {paginatedData.length === 0 ? (
-                <TableRow>
-                  <TableCell
+                <tr>
+                  <td
                     colSpan={columns.length}
-                    className="h-24 text-center"
+                    className="p-2 align-middle h-24 text-center border-b"
                   >
                     No data available
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ) : (
                 paginatedData.map((row, idx) => (
-                  <TableRow key={idx} className="hover:bg-muted/50">
+                  <tr key={idx} className="hover:bg-muted/50 border-b transition-colors">
                     {columns.map((col, colIndex) => (
-                      <TableCell
+                      <td
                         key={col.key}
                         style={{ 
                           width: getColumnWidth(col), 
                           minWidth: getColumnWidth(col),
                           position: colIndex === 0 ? "sticky" : undefined,
                           left: colIndex === 0 ? 0 : undefined,
-                          zIndex: 10,
-                          backgroundColor: "hsl(var(--background))",
+                          zIndex: colIndex === 0 ? 25 : undefined,
+                          backgroundColor: colIndex === 0 ? "hsl(var(--background))" : undefined,
                         }}
-                        className={`border-r border-border last:border-r-0 align-top ${
+                        className={`p-2 align-middle border-r border-border last:border-r-0 ${
                           col.align === "right" ? "text-right" : ""
                         }`}
                       >
@@ -201,13 +198,14 @@ export function TransactionTable({
                             ? String(row[col.key])
                             : "-"}
                         </span>
-                      </TableCell>
+                      </td>
                     ))}
-                  </TableRow>
+                  </tr>
                 ))
               )}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="flex items-center gap-4">
