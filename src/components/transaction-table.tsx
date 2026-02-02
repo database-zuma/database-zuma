@@ -135,7 +135,7 @@ export function TransactionTable({
       </div>
 
       <div className="border rounded-md overflow-auto" style={{ maxHeight: "calc(100vh - 280px)" }}>
-          <Table>
+          <Table className="[&>[data-slot=table-container]]:overflow-visible">
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 {columns.map((col, colIndex) => (
