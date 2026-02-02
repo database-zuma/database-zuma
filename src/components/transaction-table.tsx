@@ -163,12 +163,12 @@ export function TransactionTable({
         </p>
       </div>
 
-      <div className="border rounded-md">
+      <div className="border rounded-md relative">
         <div
           ref={topScrollRef}
           onScroll={handleTopScroll}
-          className="overflow-x-scroll border-b bg-muted/50"
-          style={{ height: "16px" }}
+          className="overflow-x-scroll overflow-y-hidden"
+          style={{ height: "12px" }}
         >
           <div style={{ width: `${tableWidth}px`, height: "1px" }} />
         </div>
@@ -176,18 +176,25 @@ export function TransactionTable({
         <div
           ref={tableScrollRef}
           onScroll={handleTableScroll}
-          className="overflow-x-auto max-h-[calc(100vh-280px)]"
+          className="overflow-auto max-h-[calc(100vh-300px)]"
         >
-          <Table ref={tableRef}>
+          <Table ref={tableRef} className="relative">
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 {columns.map((col, colIndex) => (
                   <TableHead
                     key={col.key}
-                    style={{ width: getColumnWidth(col), minWidth: getColumnWidth(col) }}
-                    className={`cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 bg-muted sticky top-0 z-20 ${
+                    style={{ 
+                      width: getColumnWidth(col), 
+                      minWidth: getColumnWidth(col),
+                      position: "sticky",
+                      top: 0,
+                      left: colIndex === 0 ? 0 : undefined,
+                      zIndex: colIndex === 0 ? 30 : 20,
+                    }}
+                    className={`cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 bg-muted ${
                       col.align === "right" ? "text-right" : ""
-                    } ${colIndex === 0 ? "sticky left-0 z-30" : ""}`}
+                    }`}
                     onClick={() => handleSort(col.key)}
                   >
                     <div className="flex items-center gap-1">
@@ -219,10 +226,16 @@ export function TransactionTable({
                     {columns.map((col, colIndex) => (
                       <TableCell
                         key={col.key}
-                        style={{ width: getColumnWidth(col), minWidth: getColumnWidth(col) }}
+                        style={{ 
+                          width: getColumnWidth(col), 
+                          minWidth: getColumnWidth(col),
+                          position: colIndex === 0 ? "sticky" : undefined,
+                          left: colIndex === 0 ? 0 : undefined,
+                          zIndex: colIndex === 0 ? 10 : undefined,
+                        }}
                         className={`border-r border-border last:border-r-0 align-top bg-background ${
                           col.align === "right" ? "text-right" : ""
-                        } ${colIndex === 0 ? "sticky left-0 z-10 bg-background" : ""}`}
+                        }`}
                       >
                         <span className="break-words whitespace-normal leading-relaxed">
                           {row[col.key] !== null && row[col.key] !== undefined
