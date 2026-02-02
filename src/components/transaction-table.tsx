@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   ChevronDown,
@@ -33,11 +33,35 @@ interface SortState {
   direction: SortDirection;
 }
 
+interface ColumnDef {
+  key: string;
+  label: string;
+  align?: "left" | "right";
+  width?: string;
+}
+
 interface TransactionTableProps {
   data: Record<string, unknown>[];
-  columns: { key: string; label: string; align?: "left" | "right" }[];
+  columns: ColumnDef[];
   entityName: string;
 }
+
+const defaultColumnWidths: Record<string, string> = {
+  No: "60px",
+  Tanggal: "100px",
+  Artikel: "120px",
+  "Nama Barang": "200px",
+  "Transaksi in": "100px",
+  "transaksi out": "100px",
+  "Gudang Asal": "120px",
+  "Gudang Terima": "120px",
+  DNPB: "180px",
+  "No. SO": "120px",
+  "BST/DN": "100px",
+  "NO PO": "150px",
+  "NO LPB": "150px",
+  Remaks: "150px",
+};
 
 export function TransactionTable({
   data,
@@ -49,6 +73,14 @@ export function TransactionTable({
   const [sort, setSort] = useState<SortState>({ key: null, direction: null });
   const topScrollRef = useRef<HTMLDivElement>(null);
   const tableScrollRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
+  const [tableWidth, setTableWidth] = useState(0);
+
+  useEffect(() => {
+    if (tableRef.current) {
+      setTableWidth(tableRef.current.scrollWidth);
+    }
+  }, [data, columns]);
 
   const handleSort = (key: string) => {
     setSort((prev) => ({
@@ -74,6 +106,16 @@ export function TransactionTable({
       if (aVal === null || aVal === undefined) return 1;
       if (bVal === null || bVal === undefined) return -1;
 
+      const aNum = Number(aVal);
+      const bNum = Number(bVal);
+      const bothAreNumbers = !isNaN(aNum) && !isNaN(bNum) && aVal !== "" && bVal !== "";
+
+      if (bothAreNumbers) {
+        if (sort.direction === "asc") {
+          return aNum - bNum;
+        }
+        return bNum - aNum;
+      }
       const aStr = String(aVal).toLowerCase();
       const bStr = String(bVal).toLowerCase();
 
@@ -89,21 +131,21 @@ export function TransactionTable({
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = sortedData.slice(startIndex, endIndex);
 
-  const handleTopScroll = () => {
-    if (tableScrollRef.current && topScrollRef.current) {
-      tableScrollRef.current.scrollLeft = topScrollRef.current.scrollLeft;
+  const handleTopScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (tableScrollRef.current) {
+      tableScrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
     }
   };
 
-  const handleTableScroll = () => {
-    if (topScrollRef.current && tableScrollRef.current) {
-      topScrollRef.current.scrollLeft = tableScrollRef.current.scrollLeft;
+  const handleTableScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (topScrollRef.current) {
+      topScrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
     }
   };
 
-  const scrollWidth = useMemo(() => {
-    return columns.length * 150;
-  }, [columns.length]);
+  const getColumnWidth = (col: ColumnDef) => {
+    return col.width || defaultColumnWidths[col.key] || "150px";
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -118,10 +160,10 @@ export function TransactionTable({
         <div
           ref={topScrollRef}
           onScroll={handleTopScroll}
-          className="overflow-x-auto border-b scrollbar-thin"
+          className="overflow-x-auto border-b bg-muted/50"
           style={{ height: "16px" }}
         >
-          <div style={{ width: `${scrollWidth}px`, height: "1px" }} />
+          <div style={{ width: `${tableWidth}px`, height: "1px" }} />
         </div>
 
         <div
@@ -129,24 +171,25 @@ export function TransactionTable({
           onScroll={handleTableScroll}
           className="overflow-x-auto max-h-[calc(100vh-280px)]"
         >
-          <Table>
+          <Table ref={tableRef}>
             <TableHeader className="bg-muted sticky top-0 z-10">
               <TableRow>
-                {columns.map((col, index) => (
+                {columns.map((col) => (
                   <TableHead
                     key={col.key}
-                    className={`cursor-pointer hover:bg-muted/80 whitespace-nowrap border-r border-border last:border-r-0 ${
+                    style={{ width: getColumnWidth(col), minWidth: getColumnWidth(col) }}
+                    className={`cursor-pointer hover:bg-muted/80 border-r border-border last:border-r-0 ${
                       col.align === "right" ? "text-right" : ""
                     }`}
                     onClick={() => handleSort(col.key)}
                   >
                     <div className="flex items-center gap-1">
-                      {col.label}
+                      <span className="break-words leading-tight">{col.label}</span>
                       {sort.key === col.key &&
                         (sort.direction === "asc" ? (
-                          <ChevronUp className="h-4 w-4" />
+                          <ChevronUp className="h-4 w-4 shrink-0" />
                         ) : sort.direction === "desc" ? (
-                          <ChevronDown className="h-4 w-4" />
+                          <ChevronDown className="h-4 w-4 shrink-0" />
                         ) : null)}
                     </div>
                   </TableHead>
@@ -166,16 +209,19 @@ export function TransactionTable({
               ) : (
                 paginatedData.map((row, idx) => (
                   <TableRow key={idx}>
-                    {columns.map((col, colIndex) => (
+                    {columns.map((col) => (
                       <TableCell
                         key={col.key}
-                        className={`border-r border-border last:border-r-0 ${
+                        style={{ width: getColumnWidth(col), minWidth: getColumnWidth(col) }}
+                        className={`border-r border-border last:border-r-0 align-top ${
                           col.align === "right" ? "text-right" : ""
                         }`}
                       >
-                        {row[col.key] !== null && row[col.key] !== undefined
-                          ? String(row[col.key])
-                          : "-"}
+                        <span className="break-words whitespace-normal leading-relaxed">
+                          {row[col.key] !== null && row[col.key] !== undefined
+                            ? String(row[col.key])
+                            : "-"}
+                        </span>
                       </TableCell>
                     ))}
                   </TableRow>
