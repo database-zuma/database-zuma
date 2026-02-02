@@ -178,17 +178,16 @@ export function TransactionTable({
         <div
           ref={topScrollRef}
           onScroll={handleTopScroll}
-          className="overflow-x-scroll overflow-y-hidden"
-          style={{ height: "12px" }}
+          className="overflow-x-auto overflow-y-hidden bg-muted/50 border-b cursor-pointer"
+          style={{ height: "16px" }}
         >
-          <div style={{ width: `${tableWidth}px`, height: "1px" }} />
+          <div style={{ width: `${tableWidth}px`, minWidth: "100%", height: "1px" }} />
         </div>
 
         <div
           ref={tableScrollRef}
           onScroll={handleTableScroll}
           className="overflow-auto max-h-[calc(100vh-300px)]"
-        >
           <Table ref={tableRef} className="relative">
             <TableHeader>
               <TableRow className="hover:bg-transparent">
