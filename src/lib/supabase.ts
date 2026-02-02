@@ -7,4 +7,9 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
   db: {
     schema: "branch_super_app_clawdbot",
   },
+  global: {
+    headers: {
+      "Accept-Profile": "branch_super_app_clawdbot",
+    },
+  },
 });
