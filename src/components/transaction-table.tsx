@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   ChevronDown,
@@ -71,28 +71,6 @@ export function TransactionTable({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [sort, setSort] = useState<SortState>({ key: null, direction: null });
-  const topScrollRef = useRef<HTMLDivElement>(null);
-  const tableScrollRef = useRef<HTMLDivElement>(null);
-  const tableRef = useRef<HTMLTableElement>(null);
-  const isSyncing = useRef(false);
-  const [tableWidth, setTableWidth] = useState(0);
-
-  useEffect(() => {
-    const updateWidth = () => {
-      if (tableRef.current) {
-        setTableWidth(tableRef.current.scrollWidth);
-      }
-    };
-    
-    updateWidth();
-    
-    const resizeObserver = new ResizeObserver(updateWidth);
-    if (tableRef.current) {
-      resizeObserver.observe(tableRef.current);
-    }
-    
-    return () => resizeObserver.disconnect();
-  }, [data, columns]);
 
   const handleSort = (key: string) => {
     setSort((prev) => ({
@@ -143,24 +121,6 @@ export function TransactionTable({
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = sortedData.slice(startIndex, endIndex);
 
-  const handleTopScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (isSyncing.current) return;
-    isSyncing.current = true;
-    if (tableScrollRef.current) {
-      tableScrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
-    }
-    requestAnimationFrame(() => { isSyncing.current = false; });
-  };
-
-  const handleTableScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (isSyncing.current) return;
-    isSyncing.current = true;
-    if (topScrollRef.current) {
-      topScrollRef.current.scrollLeft = e.currentTarget.scrollLeft;
-    }
-    requestAnimationFrame(() => { isSyncing.current = false; });
-  };
-
   const getColumnWidth = (col: ColumnDef) => {
     return col.width || defaultColumnWidths[col.key] || "150px";
   };
@@ -174,30 +134,8 @@ export function TransactionTable({
         </p>
       </div>
 
-      <div className="border rounded-md">
-        <div
-          ref={topScrollRef}
-          onScroll={handleTopScroll}
-          style={{ 
-            overflowX: "auto", 
-            overflowY: "hidden",
-            height: "16px",
-            backgroundColor: "hsl(var(--muted))",
-            borderBottom: "1px solid hsl(var(--border))"
-          }}
-        >
-          <div style={{ width: tableWidth, height: "1px", minWidth: "100%" }} />
-        </div>
-
-        <div
-          ref={tableScrollRef}
-          onScroll={handleTableScroll}
-          style={{ 
-            overflow: "auto",
-            maxHeight: "calc(100vh - 300px)"
-          }}
-        >
-          <Table ref={tableRef}>
+      <div className="border rounded-md overflow-auto" style={{ maxHeight: "calc(100vh - 280px)" }}>
+          <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 {columns.map((col, colIndex) => (
@@ -270,7 +208,6 @@ export function TransactionTable({
               )}
             </TableBody>
           </Table>
-        </div>
       </div>
 
       <div className="flex items-center gap-4">
