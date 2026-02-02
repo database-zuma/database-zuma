@@ -78,9 +78,20 @@ export function TransactionTable({
   const [tableWidth, setTableWidth] = useState(0);
 
   useEffect(() => {
+    const updateWidth = () => {
+      if (tableRef.current) {
+        setTableWidth(tableRef.current.scrollWidth);
+      }
+    };
+    
+    updateWidth();
+    
+    const resizeObserver = new ResizeObserver(updateWidth);
     if (tableRef.current) {
-      setTableWidth(tableRef.current.scrollWidth);
+      resizeObserver.observe(tableRef.current);
     }
+    
+    return () => resizeObserver.disconnect();
   }, [data, columns]);
 
   const handleSort = (key: string) => {

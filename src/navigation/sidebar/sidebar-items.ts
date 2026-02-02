@@ -64,7 +64,7 @@ export const sidebarItems: NavGroup[] = [
     items: [
       {
         title: "RO Process",
-        url: "/dashboard/finance",
+        url: "/dashboard/ro_process",
         icon: Banknote,
       },
     ],
